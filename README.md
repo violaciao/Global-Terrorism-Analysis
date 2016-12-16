@@ -11,7 +11,14 @@ This project provides an interactive visualization platform of the global terror
 Presentation
 ------------
 
-- [IVIS-GTD Notebook](https://github.com/violaciao/Global-Terrorism-Analysis/blob/master/GTA/Global%20Terrorism%20Analysis%20-%20ICT4SD.ipynb)
+- [GTA Notebook](https://github.com/violaciao/Global-Terrorism-Analysis/blob/master/GTA/Global%20Terrorism%20Analysis%20-%20ICT4SD.ipynb)
+
+
+
+User Manual
+------------
+
+- [GTA User Manual](https://docs.google.com/document/d/1KNxP-8Ccey1tM1sOBJRB7VyB3rjtPe2gbDFlHtD_iCk/edit?invite=CJDxrtgM&ts=58545934#)
 
 
 References
