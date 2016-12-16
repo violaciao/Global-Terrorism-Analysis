@@ -1,7 +1,15 @@
 '''
-Created on Dec 14, 2016
+This module:
 
-@author: Caroline
+1) Prepares a dataset to be turned into a bubble chart: selects features, creates ranges from numeric features
+2) Aggregates and reshapes the data within the Bubble_Chart_Data class. This class is intended to be flexible so that
+programmers can easily adapt it to reconfigure new bubble charts or use these techniques on different data.
+3) Plot the bubble chart with appropriate legends, titles, and formatting.
+4) Creates a function that allows users to scroll through the bubble chart over time.
+
+
+module author: Caroline Roper
+project co-author: Viola Ciao
 '''
 
 from ipywidgets import *
