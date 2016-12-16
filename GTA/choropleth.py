@@ -12,7 +12,8 @@ This module allows users to
     - customize color palette
     - zoom up to get a more detialed view
 
-@author: Xianzhi Cao (xc965)
+Module Author: Xianzhi Cao (xc965)
+Project co-author: Caroline Roper (cer446)
 '''
 
 

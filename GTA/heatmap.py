@@ -7,7 +7,8 @@ This module includes:
     - the target feature
     - the visualizing color palette
 
-@author: Xianzhi Cao (xc965)
+Module Author: Xianzhi Cao (xc965)
+Project co-author: Caroline Roper (cer446)
 '''
 
 

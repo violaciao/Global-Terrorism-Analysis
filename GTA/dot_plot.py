@@ -1,13 +1,13 @@
 '''
 This module:
-1) Processes data within the Dot_Plot_Data class. This class is intended to be somewhat flexible so that programmers 
+1) Processes data within the Dot_Plot_Data class. This class is intended to be somewhat flexible so that programmers
 can consider alternate reconfigurations of the dot plot or use different data in the future.
 2) Defines a function that prepares a dot plot and then plots it.
 3) Defines widgets that the user can manipulate so that they can alter the appearance of the dot plot.
 4) Defines a function that applies the input captured by the widgets to the dot plot.
 
-Module Author: Caroline Roper cer446
-Project co-author: Viola Ciao
+Module Author: Caroline Roper (cer446)
+Project co-author: Viola Ciao (xc965)
 '''
 
 
@@ -44,32 +44,32 @@ class Dot_Plot_Data():
             self.count_by_subgroup()
         if self.metric == 'casualties':
             self.sum_by_subgroup()
-        
+
     def count_by_subgroup(self):
         '''Uses group from init function to create a count'''
         self.data = unstack_table(count_by_groups(self.subgroups))
-        
+
     def sum_by_subgroup(self):
         '''Uses sum from init function to create a sum'''
         self.data = unstack_table(sum_by_groups(self.subgroups))
-  
+
     def user_selection(self, year_tuple, attack_type):
         '''Selects year and attack type'''
         years = tuple(range(year_tuple[0], year_tuple[1]+1))
         self.attack_type = attack_type
         self.data = self.data.loc[:, (slice(None), attack_type, years)]
-    
+
     def aggregate(self):
         '''sum horizontally'''
         self.data = self.data.sum(axis=1)
-        
+
     def convert_series(self, label):
         '''Takes a series and label for the series' values, returns dataframe with 2 columns: the series' row index, & the series' values'''
         self.label = label
         self.data = pd.DataFrame(self.data)
         self.data.columns = [label]
         self.data.reset_index(level=0, inplace=True)
-    
+
     def take_top_20(self):
         '''Sorts and takes top 20 values'''
         self.data = self.data.sort_values(self.label, ascending=False).iloc[0:20, :]
@@ -78,18 +78,18 @@ class Dot_Plot_Data():
 def create_dot_plot(metric, attacktype, year_range):
     '''Creates a dot plot with input specifications'''
     #Portions of this code were adapted from: http://seaborn.pydata.org/examples/pairgrid_dotplot.html
-    
+
     pd.options.mode.chained_assignment = None
-    
+
     dot_plot = Dot_Plot_Data(global_terrorism.gt_df, 'country', 'casualties', 'year', 'attacktype', metric)
-    
+
     dot_plot.user_selection(year_range, attacktype)
     dot_plot.aggregate()
     dot_plot.convert_series(str.title(metric) + ' from ' + attacktype)
     dot_plot.take_top_20()
-    
+
     sns.set(style="whitegrid")
-    
+
     g = sns.PairGrid(dot_plot.data,
                      x_vars=str.title(metric) + ' from ' + attacktype, y_vars=['country'],
                      size=12, aspect=.50)
@@ -97,7 +97,7 @@ def create_dot_plot(metric, attacktype, year_range):
     # Draw a dot plot using the stripplot function
     g.map(sns.stripplot, size=10, orient="h",
           palette="Blues_r", edgecolor="gray")
-    
+
     xmax = math.ceil(max(dot_plot.data[dot_plot.label])/1000)*1000
 
     g.set(xlim=(0, xmax), xlabel=str.title(metric), ylabel=str.title(dot_plot.yaxis_vals))
@@ -144,4 +144,3 @@ def Display_Your_Dot_Plot():
     Allow users to customize the dot plot
     '''
     interact(create_dot_plot, metric = metric_selection(), attacktype = attack_type(), year_range = year_interval_slider());
-

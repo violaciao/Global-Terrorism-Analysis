@@ -7,7 +7,7 @@ Functions includes:
     - convert feature value series into list
     - group columns and other uses
 
-@author: Xianzhi Cao (xc965) and Caroline Roper (cer446)
+Module Authors: Xianzhi Cao (xc965) and Caroline Roper (cer446)
 '''
 
 

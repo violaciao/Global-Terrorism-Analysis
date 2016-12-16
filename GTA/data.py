@@ -9,7 +9,8 @@ This module:
 The whole process simply aims at generating the original dataset
 and shortening the loading time for future data manipulations.
 
-@author: Xianzhi Cao (xc965)
+Module Author: Xianzhi Cao (xc965)
+Project co-author: Caroline Roper (cer446)
 '''
 
 import pandas as pd

@@ -1,7 +1,8 @@
 '''
 This module contains user's self-defined exceptions.
 
-@author: Xianzhi Cao (xc965)
+Module Author: Xianzhi Cao (xc965)
+Project co-author: Caroline Roper (cer446)
 '''
 
 # Error: Data not available in this year.

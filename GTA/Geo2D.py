@@ -8,7 +8,8 @@ This module allows users to
     - visualize the terror attacks' occurrence density
     - customize map background
 
-@author: Xianzhi Cao (xc965)
+Module Author: Xianzhi Cao (xc965)
+Project co-author: Caroline Roper (cer446)
 '''
 
 

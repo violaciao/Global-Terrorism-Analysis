@@ -11,7 +11,8 @@ Important: We should put emphasis on the data ANALYSING part as well!
 Finally, test the program, and make sure all tests are passed.
 Test modules should be put under the top level of the project directory.
 
-@author: Viola
+Module Author: Xianzhi Cao (xc965)
+Project co-author: Caroline Roper (cer446)
 '''
 
 

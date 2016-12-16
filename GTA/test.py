@@ -4,7 +4,7 @@ This module tests:
     - all the crucial functions in this program
     - exceptions and errors
 
-@author: Xianzhi Cao (xc965)
+Module Authors: Xianzhi Cao (xc965) & Caroline Roper (cer446)
 '''
 
 import unittest

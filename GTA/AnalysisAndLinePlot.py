@@ -7,7 +7,8 @@ This module allows users to:
     - select feature
     - customize color
 
-@author: Xianzhi Cao (xc965)
+Module Author: Xianzhi Cao (xc965)
+Project co-author: Caroline Roper (cer446)
 '''
 
 import pandas as pd
