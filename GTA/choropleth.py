@@ -169,8 +169,7 @@ def color_palette_picker():
                              'Orchid': 'RdPu',
                              'NYU Pride': 'BuPu',
                              'Alert': 'OrRd',
-                             'Water Green': 'GnBu',
-                             'Autumn Leaf': 'YlOrBr'
+                             'Grassland': 'GnBu',
                              },
                     value='PuBu',
                     description='Palette',

@@ -47,8 +47,8 @@ def Heatmap_by_region(Feature, Region, Cmap):
     '''
     Parameters
         - Feature: feature of damages       | str
-        - Region    : name of region        | str
-        - Cmap      : color map             | str
+        - Region : name of region           | str
+        - Cmap   : color map                | str
     Return
         A Heatmap
             of a comparison of values by chosen Feature
@@ -104,8 +104,6 @@ def Cmap_palette_picker():
     return Dropdown(options={'Aqua': 'cool',
                              'Lemon': 'Wistia',
                              'NYU Pride': 'Purples',
-                             'Alert': 'Reds',
-                             'B&W': 'gist_gray_r',
                              'Classic': 'RdBu_r'
                              },
                     value='RdBu_r',
@@ -119,7 +117,7 @@ def feature3_picker():
     '''
     Return a string of feature name from users' manual pick
     '''
-    return ToggleButtons(options={'Kills': 'kills',
+    return ToggleButtons(options={'Deaths': 'kills',
                                   'Wounds': 'wounds',
                                   'Casualties': 'casualties'
                                   },

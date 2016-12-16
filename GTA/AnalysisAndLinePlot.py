@@ -148,31 +148,31 @@ def analy_ctr(Country):
     desc = ctr_stats(Country)
     df_ixby_yr = df_ctr_all(Country).set_index('year')
     analysis_str = '\
-             Statistical Analysis - Terror Attacks in {}                        \n\
-                                  * * *                                         \n\
---+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--\n\
-During the year 1970 to 2015:                                                   \n\
-    - The year with the most attacks:        {}                                 \n\
-             * {} times of terror attacks in {} in this year                    \n\
-    - The year with the most casulties:      {}                                 \n\
-             * {} suffered the most severe damage by terrorism in this year.    \n\
-             * {} people were killed or wounded.                                \n\
-             * {} times of terror attacks in {} in this year                    \n\
-    - Occurrences of Terror Attacks                                             \n\
-             * The total number:              {} \n \
-            * The annual average:            {} \n \
-            * The standard deviation:        {} \n \
-   - Casualties                                 \n \
-        1) The total number:                 {} \n \
-            * kills                          {} \n \
-            * wounds                         {} \n \
-        2) The annual average:               {} \n \
-            * kills                          {} \n \
-            * wounds                         {} \n \
-        3) The standard deviation:           {} \n \
-            * kills                          {} \n \
-            * wounds                         {} \n \
---+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--\n'
+                      Statistical Analysis - Terrorism Attacks in {}                        \n\
+                                                * * *                                       \n\
+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--\n\
+                During the year 1970 to 2015:                                               \n\
+                - The year with the most attacks:        {}                                 \n\
+                         * {} times of terror attacks in {} in this year                    \n\
+                - The year with the most casulties:      {}                                 \n\
+                         * {} suffered the most severe damage by terrorism in this year.    \n\
+                         * {} people were killed or wounded.                                \n\
+                         * {} times of terror attacks in {} in this year                    \n\
+                - Occurrences of Terrorism Attacks                                          \n\
+                         * The total number:              {} \n \
+                        * The annual average:            {} \n \
+                        * The standard deviation:        {} \n \
+               - Casualties                                 \n \
+                    1) The total number:                 {} \n \
+                        * kills                          {} \n \
+                        * wounds                         {} \n \
+                    2) The annual average:               {} \n \
+                        * kills                          {} \n \
+                        * wounds                         {} \n \
+                    3) The standard deviation:           {} \n \
+                        * kills                          {} \n \
+                        * wounds                         {} \n \
+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--\n'
     analysis = analysis_str.format(Country,
                                    np.argmax(df_ixby_yr.occurrences),               # the year with maximum occurrence
                                    int(df_ixby_yr.occurrences.max()),               # the maximum occurrence

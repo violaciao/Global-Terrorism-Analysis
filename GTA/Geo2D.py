@@ -16,7 +16,9 @@ from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import pandas as pd
 import util as ut
+import re
 from ipywidgets import *
+from UserError import *
 
 
 def plot_2D_density(Year, MapStyle):
@@ -28,40 +30,58 @@ def plot_2D_density(Year, MapStyle):
         A 2D Geo Map: The denser the red marker in a country,
                       the more severe damages had taken place.
     '''
-    df = ut.df_sel_btw_years(Year)
-    plt.figure(figsize=(18,10), frameon=False)
+    # use regular expression to check the format
+    if not re.match(r'[\[|\(][0-9]{4}\,\s?[0-9]{4}[\]|\)]$', str(Year)):
+        raise NotIntervalError
 
-    m = Basemap('mill')
-    m.drawcountries(linewidth=0.5,
-                    linestyle='solid',
-                    color='white',
-                    antialiased=1,
-                    ax=None,
-                    zorder=None
-                    )
+    # the starting year should be less than the ending yer
+    elif Year[0] >= Year[1]:
+        raise IntervalReverseError
 
-    # Background settings
-    if MapStyle == 'Blue Marble':
-        m.drawcoastlines()
-        m.bluemarble()
-    elif MapStyle == 'Etopo':
-        m.etopo()
+    # catch the missing value exceptions in 1993
+    elif Year == (1993, 1993):
+        print('Data of 1993 is not available in Global Terrorism Database.\n\
+Click the link to learn why.\nhttps://www.start.umd.edu/gtd/faq/')
+
+    # catch the out of range yer interval input errors
+    elif (Year[0] < 1970) or (Year[1] > 2015):
+        raise IntervalLeakError
+
     else:
-        m.drawcoastlines(color='w')
-        m.drawcountries(color='w')
-        m.drawstates(color='w')
-        m.fillcontinents(color='lightblue',lake_color='w')
-        m.drawmapboundary(fill_color='w', color='w')
+        df = ut.df_sel_btw_years(Year)
+        plt.figure(figsize=(18,10), frameon=False)
 
-    # get latitude and longitude
-    lat = ut.make_array(df, 'latitude')
-    lon = ut.make_array(df, 'longitude')
+        m = Basemap('mill')
+        m.drawcountries(linewidth=0.5,
+                        linestyle='solid',
+                        color='white',
+                        antialiased=1,
+                        ax=None,
+                        zorder=None
+                        )
 
-    x,y = m(lon, lat)
-    m.plot(x, y, 'r^', marker='o', markersize=4, alpha=.3)
+        # Background settings
+        if MapStyle == 'Blue Marble':
+            m.drawcoastlines()
+            m.bluemarble()
+        elif MapStyle == 'Etopo':
+            m.etopo()
+        else:
+            m.drawcoastlines(color='w')
+            m.drawcountries(color='w')
+            m.drawstates(color='w')
+            m.fillcontinents(color='lightblue',lake_color='w')
+            m.drawmapboundary(fill_color='w', color='w')
 
-    plt.title('Global Attack Density Plot: {}-{}'.format(Year[0], Year[1]), size=16)
-    plt.show()
+        # get latitude and longitude
+        lat = ut.make_array(df, 'latitude')
+        lon = ut.make_array(df, 'longitude')
+
+        x,y = m(lon, lat)
+        m.plot(x, y, 'r^', marker='o', markersize=4, alpha=.3)
+
+        plt.title('Global Attack Density Plot: {}-{}'.format(Year[0], Year[1]), size=16)
+        plt.show()
 
 
 def year_interval_slider():

@@ -17,7 +17,7 @@ Test modules should be put under the top level of the project directory.
 
 import AnalysisAndLinePlot as al
 import heatmap as ht
-import choropleth as choro
+import choropleth as cr
 import Geo2D as geo
 
 
@@ -26,7 +26,7 @@ def GTA_AL():
 
 
 def GTA_CHR():
-    return choro.Display_Your_Choropleth()
+    return cr.Display_Your_Choropleth()
 
 
 def GTA_HT():
