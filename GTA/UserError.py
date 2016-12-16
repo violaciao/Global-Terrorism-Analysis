@@ -22,6 +22,12 @@ class LoadJsonError(Exception):
         return 'This is not a json file!\n'
 
 
+# Error: Loading the wrong excel file error
+class WrongDatafileError(Exception):
+    def __str__(self):
+        return 'Please use the offical dataset by GTD following the User Manual!\n'
+
+
 # Error: Input is not a year interval
 class NotIntervalError(Exception):
     def __str__(self):

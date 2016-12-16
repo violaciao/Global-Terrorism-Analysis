@@ -6,7 +6,7 @@ Functions includes:
     - extract unique names
     - convert feature value series into list
     - group columns and other uses
-    
+
 @author: Xianzhi Cao (xc965) and Caroline Roper (cer446)
 '''
 
