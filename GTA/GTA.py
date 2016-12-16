@@ -19,6 +19,8 @@ import AnalysisAndLinePlot as al
 import heatmap as ht
 import choropleth as cr
 import Geo2D as geo
+import bubble_chart as bc
+import dot_plot as dot
 
 
 def GTA_AL():
@@ -35,3 +37,11 @@ def GTA_HT():
 
 def GTA_GEO():
     return geo.Display_Your_Geo2D_Map()
+
+
+def GTA_BC():
+    return bc.Display_Your_Bubble_Chart()
+
+
+def GTA_DOT():
+    return dot.Display_Your_Dot_Plot()
