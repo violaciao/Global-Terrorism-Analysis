@@ -35,7 +35,7 @@ class UserTest(unittest.TestCase):
         df4 = pd.DataFrame(['Box', 'Bag', 'Bag', 'Box', 'Box', 'Box', 'Bag', 'Bag', 'Box', 'Box'], columns = ['Container'])
         self.test_data = pd.concat([df1, df2, df3, df4], axis =1)
 
-        self.data_creation = hm.GTA()
+        self.data_creation = ht.GTA()
         self.test_bc_data = self.data_creation.gt_df[0:10][['country', 'region', 'attacktype', 'casualties']]
         self.test_bubble_chart = Bubble_Chart_Data(self.test_bc_data, 'country', 'region', 'attacktype', 'casualties')
 
@@ -103,7 +103,7 @@ class UserTest(unittest.TestCase):
         self.test_dot_plot.aggregate()
         #create comparison data a different way to verify results are accurate
         over1980 = self.data_creation.gt_df[self.data_creation.gt_df['year'] >= 1980]
-        below1990 = over1980[over1980['year']<1990]
+        below1990 = over1980[over1980['year']<=1990]
         armedassault_80_90 = below1990[below1990['attacktype'] == 'Armed Assault']
         sum1 = sum(armedassault_80_90['casualties'])
         self.assertEqual(sum1, sum(self.test_dot_plot.data))
