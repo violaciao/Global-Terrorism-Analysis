@@ -17,6 +17,9 @@ import heatmap as ht
 import Geo2D as geo
 from data import *
 from UserError import *
+from dot_plot import *
+from bubble_chart import *
+pd.options.mode.chained_assignment = None
 
 
 class UserTest(unittest.TestCase):
@@ -25,7 +28,19 @@ class UserTest(unittest.TestCase):
     """
 
     def setUp(self):
-        pass
+        '''Produces short test datasets that can be used to unit test functions affecting dataframes'''
+        df1 = pd.DataFrame(np.random.randn(10, 5),columns=['a', 'b', 'c', 'd', 'e'])
+        df2 = pd.DataFrame(['High', 'Medium', 'Low', 'High', 'High', 'Low', 'Low', 'Medium', 'Low', 'Low'], columns = ['Height'])
+        df3 = pd.DataFrame(['Heavy', 'Light', 'Very Heavy', 'Very Heavy', 'Light', 'Very Light', 'Very Light', 'Light', 'Light', 'Heavy'], columns = ['Weight'])
+        df4 = pd.DataFrame(['Box', 'Bag', 'Bag', 'Box', 'Box', 'Box', 'Bag', 'Bag', 'Box', 'Box'], columns = ['Container'])
+        self.test_data = pd.concat([df1, df2, df3, df4], axis =1)
+
+        self.data_creation = hm.GTA()
+        self.test_bc_data = self.data_creation.gt_df[0:10][['country', 'region', 'attacktype', 'casualties']]
+        self.test_bubble_chart = Bubble_Chart_Data(self.test_bc_data, 'country', 'region', 'attacktype', 'casualties')
+
+        self.test_dot_plot_data = self.data_creation.gt_df[0:50000]
+        self.test_dot_plot = Dot_Plot_Data(self.test_dot_plot_data, 'country', 'casualties', 'year', 'attacktype', 'casualties')
 
 
     def test_make_df(self):
@@ -80,12 +95,81 @@ class UserTest(unittest.TestCase):
         self.assertTrue(2000 in list(df3[df3.year.isin([2001, 2002, 2004])].period))
         self.assertNotIn(2005, list(df3[df3.year.isin([2001, 2002, 2004])].period.values))
 
-    #################
+    def test_dot_plot_init(self):
+        '''Tests whether the dot plot's init function sets all necessary instance variables. Uses smaller section of data'''
+        pd.options.mode.chained_assignment = None
+        self.assertEqual(self.test_dot_plot.__dict__['xaxis_vals'],'casualties')
+        self.assertEqual(self.test_dot_plot.__dict__['yaxis_vals'],'country')
+        self.assertEqual(self.test_dot_plot.__dict__['user_filter1'],'year')
+        self.assertEqual(self.test_dot_plot.__dict__['user_filter2'],'attacktype')
+        self.assertEqual(self.test_dot_plot.__dict__['metric'],'casualties')
 
-    # Caroline's test goes here
+    def test_dot_plot_user_selection(self):
+        '''Tests whether the dot plot user_selection method removes the years not included'''
+        self.test_dot_plot.user_selection((1980,1990), 'Armed Assault')
+        self.assertEqual(self.test_dot_plot.data.loc[:,(slice(None), slice(None), 1970)].shape[1],0)
 
-    #################
+    def test_dot_plot_aggregation(self):
+        self.test_dot_plot.user_selection((1980,1990), 'Armed Assault')
+        self.test_dot_plot.aggregate()
+        #create comparison data a different way to verify results are accurate
+        over1980 = self.data_creation.gt_df[self.data_creation.gt_df['year'] >= 1980]
+        below1990 = over1980[over1980['year']<1990]
+        armedassault_80_90 = below1990[below1990['attacktype'] == 'Armed Assault']
+        sum1 = sum(armedassault_80_90['casualties'])
+        self.assertEqual(sum1, sum(self.test_dot_plot.data))
 
+    def test_sum_by_groups(self):
+        '''Tests whether sum_by_groups produces a dataframe with a row for each group and the total is accurate'''
+        grouped_test_data = sum_by_groups(group_by_columns(self.test_data, ['Height', 'Weight'], 'a'))
+        self.assertEqual(grouped_test_data.shape, (8, 1))
+        self.assertAlmostEqual(sum(self.test_data['a']), sum(grouped_test_data['sum']))
+
+    def test_count_by_groups(self):
+        '''Tests whether count_by_groups produces a dataframe with a row for each group and the total is accurate'''
+        grouped_test_data = count_by_groups(group_by_columns(self.test_data, ['Height', 'Weight'], 'a'))
+        self.assertEqual(grouped_test_data.shape, (8, 1))
+        self.assertEqual(len(self.test_data), sum(grouped_test_data['count']))
+
+    def test_unstack_table(self):
+        '''Tests whether unstack_table produces a result with the appropriate shape'''
+        grouped_test = sum_by_groups(group_by_columns(self.test_data, ['Height', 'Weight'], 'a'))
+        self.assertEqual(unstack_table(grouped_test).shape, (3,4))
+
+    def test_create_range(self):
+        '''Tests whether create_range creates a range for every input value with correct minima and maxima'''
+        self.assertEqual(min(create_range(pd.Series(range(1,10), name = 'value'), 2)), '(-1, 1]')
+        self.assertEqual(max(create_range(pd.Series(range(1,10), name = 'value'), 2)), '(7, 9]')
+        self.assertEqual(len(create_range(pd.Series(range(1,10), name = 'value'), 2)), len(range(1,10)))
+
+    def test_replace_series_with_range(self):
+        '''Tests whether replace_series_with_range produces a dataframe with a new column with the appropriate name containing no nulls'''
+        replaced_data = replace_series_with_range(self.test_data, self.test_data['a'], 2)
+        self.assertEqual(replaced_data['a ranges'].isnull().sum(), 0)
+
+    def test_bubble_chart_init(self):
+        '''tests bubble chart init on small section of data, using attacktype as the userfilter instead of year range'''
+        self.assertEqual(self.test_bubble_chart.__dict__['bubble_id'], 'country')
+        self.assertEqual(self.test_bubble_chart.__dict__['color'], 'region')
+        self.assertEqual(self.test_bubble_chart.__dict__['user_filter'], 'attacktype')
+        self.assertEqual(self.test_bubble_chart.__dict__['values'], 'casualties')
+
+    def test_aggregate_by_subgroup(self):
+        '''verifies that aggregate_by_subgroup produces the right totals'''
+        self.test_bubble_chart.aggregate_by_subgroup()
+        self.assertEqual(sum(self.test_bubble_chart.new_data['occurrences']), len(self.test_bc_data), 'Count is not correct')
+        self.assertEqual(sum(self.test_bubble_chart.new_data['casualties']), sum(self.test_bc_data['casualties']), 'Sum is not correct')
+
+    def test_add_color_dict(self):
+        '''verifies that add_color_dict adds new column 'color' with no nulls'''
+        self.test_bubble_chart.add_color_dict()
+        self.assertEqual(self.test_bubble_chart.new_data['color'].isnull().sum(), 0)
+
+    def test_process_bubble_chart_data(self):
+        '''verifies that process_bubble_chart_data correctly calculates the all-time occurrences bubble size'''
+        self.test_bubble_chart.process_bubble_chart_data('occurrences', 'casualties')
+        subset = self.test_bubble_chart.new_data.reset_index()[['country', 'all-time occurrences']]
+        self.assertEqual(sum(subset.drop_duplicates()['all-time occurrences']), len(self.test_bubble_chart.data))
 
     def test_df_occur_by_ctr(self):
         '''
