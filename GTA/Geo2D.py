@@ -16,6 +16,7 @@ from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import pandas as pd
 import util as ut
+import data
 import re
 from ipywidgets import *
 from UserError import *
@@ -48,7 +49,12 @@ Click the link to learn why.\nhttps://www.start.umd.edu/gtd/faq/')
         raise IntervalLeakError
 
     else:
-        df = ut.df_sel_btw_years(Year)
+        if Year[0] == Year[1]:  # catch the excetion the starting year and the ending year converge
+            df_gt = data.load_df()
+            df = df_gt[df_gt.year == Year[0]]
+        else:
+            df = ut.df_sel_btw_years(Year)
+
         plt.figure(figsize=(18,10), frameon=False)
 
         m = Basemap('mill')
