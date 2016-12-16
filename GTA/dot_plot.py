@@ -1,3 +1,16 @@
+'''
+This module:
+1) Processes data within the Dot_Plot_Data class. This class is intended to be somewhat flexible so that programmers 
+can consider alternate reconfigurations of the dot plot or use different data in the future.
+2) Defines a function that prepares a dot plot and then plots it.
+3) Defines widgets that the user can manipulate so that they can alter the appearance of the dot plot.
+4) Defines a function that applies the input captured by the widgets to the dot plot.
+
+Module Author: Caroline Roper cer446
+Project co-author: Viola Ciao
+'''
+
+
 from __future__ import print_function
 from ipywidgets import interact, interactive, fixed
 import ipywidgets as widgets
@@ -15,29 +28,6 @@ global_terrorism.gt_df.head()
 
 dot_plot_features = ['country', 'year', 'attacktype', 'casualties']
 gtd_dot = global_terrorism.gt_df[dot_plot_features]
-
-def attack_type():
-    '''Return a string corresponding to an attack type'''
-    attacktypes = list(set(global_terrorism.gt_df['attacktype']))
-    attack_type = widgets.Dropdown(
-                                options=attacktypes,
-                                value='Armed Assault',
-                                description='Attack Type:',
-                                disabled=False,
-                                button_style='info') # 'success', 'info', 'warning', 'danger' or ''
-    return attack_type
-
-def metric_selection():
-    '''
-    Return a string of util name from users' manual pick
-    '''
-    metric = widgets.ToggleButtons(options={'Occurrences': 'occurrences', 'Casualties': 'casualties'},
-                         value='occurrences',
-                         description='Metric:',
-                         disabled=False,
-                         button_style='',  # 'success', 'info', 'warning', 'danger' or ''
-                         tooltip='Description')
-    return metric
 
 
 class Dot_Plot_Data():
@@ -125,6 +115,29 @@ def create_dot_plot(metric, attacktype, year_range):
         ax.yaxis.grid(True)
 
     sns.despine(left=True, bottom=True)
+
+def attack_type():
+    '''Return a string corresponding to an attack type'''
+    attacktypes = list(set(global_terrorism.gt_df['attacktype']))
+    attack_type = widgets.Dropdown(
+                                options=attacktypes,
+                                value='Armed Assault',
+                                description='Attack Type:',
+                                disabled=False,
+                                button_style='info') # 'success', 'info', 'warning', 'danger' or ''
+    return attack_type
+
+def metric_selection():
+    '''
+    Return a string of util name from users' manual pick
+    '''
+    metric = widgets.ToggleButtons(options={'Occurrences': 'occurrences', 'Casualties': 'casualties'},
+                         value='occurrences',
+                         description='Metric:',
+                         disabled=False,
+                         button_style='',  # 'success', 'info', 'warning', 'danger' or ''
+                         tooltip='Description')
+    return metric
 
 def Display_Your_Dot_Plot():
     '''
