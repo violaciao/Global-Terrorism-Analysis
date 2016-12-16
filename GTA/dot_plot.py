@@ -8,9 +8,9 @@ import math
 
 from util import *
 from Geo2D import year_interval_slider
-import heatmap as hm
+import heatmap as ht
 
-global_terrorism = hm.GTA()
+global_terrorism = ht.GTA()
 global_terrorism.gt_df.head()
 
 dot_plot_features = ['country', 'year', 'attacktype', 'casualties']
@@ -65,7 +65,7 @@ class Dot_Plot_Data():
   
     def user_selection(self, year_tuple, attack_type):
         '''Selects year and attack type'''
-        years = tuple(range(year_tuple[0], year_tuple[1]))
+        years = tuple(range(year_tuple[0], year_tuple[1]+1))
         self.attack_type = attack_type
         self.data = self.data.loc[:, (slice(None), attack_type, years)]
     
