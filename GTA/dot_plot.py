@@ -10,7 +10,7 @@ from util import *
 from Geo2D import year_interval_slider
 import heatmap as hm
 
-global_terrorism = hm.IVIS()
+global_terrorism = hm.GTA()
 global_terrorism.gt_df.head()
 
 dot_plot_features = ['country', 'year', 'attacktype', 'casualties']

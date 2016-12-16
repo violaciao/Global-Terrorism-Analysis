@@ -11,8 +11,8 @@ import heatmap as hm
 import matplotlib.pyplot as plt
 import math
 import matplotlib.patches as mpatches
+import util
 from matplotlib import cm
-import bubble_chart_class as bcc
 
 Global_terrorism_analysis = hm.GTA()
 bubble_chart_features = ['year', 'country', 'region', 'casualties']
@@ -167,15 +167,13 @@ class Bubble_Chart_Data():
 
         plt.show()
 
-bubble_chart = bcc.Bubble_Chart_Data(gtd_bubble, 'country', 'region', 'year ranges', 'casualties')
-
-bubble_chart_yr = IntSlider(min=1975,max=2015,step=5,value=1995, width = '90%', description =  'End 5yr Range')
+bubble_chart = Bubble_Chart_Data(gtd_bubble, 'country', 'region', 'year ranges', 'casualties')
 
 def Display_Your_Bubble_Chart():
     '''
     Allow users to interactively explore data information
     and customize the bubble chart
     '''
-    interact(bubble_chart.create_bubble_chart, year=bubble_chart_yr)
+    interact(bubble_chart.create_bubble_chart, year=IntSlider(min=1975,max=2015,step=5,value=1995, width = '90%', description =  'End 5yr Range'))
     
 

@@ -12,7 +12,11 @@ This module allows users to
 '''
 
 
-from mpl_toolkits.basemap import Basemap
+try:
+    from mpl_toolkits.basemap import Basemap
+except ImportError:
+    print('Basemap is not installed. The density plot will not render until you have installed it.\n\
+        Please visit the User Guide for instructions on how to install it. Thank you.')
 import matplotlib.pyplot as plt
 import pandas as pd
 import util as ut
