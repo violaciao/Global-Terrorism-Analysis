@@ -19,16 +19,40 @@ import util as ut
 from UserError import *
 
 
+# Data Preparation Function
 def excel_to_csv(path_excelfile):
     '''
+    Notice! We used this function to convert the original dataset into csv file
+    Due to the massive dataset volumn with long converting time,
+    we have uploaded the a ready-to-use 'gtd_wholedata.csv' file online.
+
+    Instructions for how to download this dataset is in the User Manual.
+    Please make sure that you have the required dataset downloaded to your local repository.
+
+    ---
+
     Input:  load the original database          | excel
     Output: save it the excel file into csv     | csv
     '''
-    path_excelfile = '../data/globalterrorismdb_0616dist.xlsx'
-    whole = pd.read_excel(path_excelfile)
-    whole.to_csv('gtd_wholedata.csv')
+    path = 'globalterrorismdb_0616dist.xlsx'
+    if path_excelfile == path:
+        whole = pd.read_excel(path_excelfile)
+        whole.to_csv('gtd_wholedata.csv')
+    else:
+        raise WrongDatafileError
 
 
+# Data Preparation Function
+def load_raw():
+    '''
+    read csv file created by excel_to_csv function
+    '''
+    df_raw = pd.read_csv('gtd_wholedata.csv', usecols=ut.selection(),
+                         low_memory=False, index_col=0).fillna(0)
+    return df_raw
+
+
+# Data Preparation Function
 def make_df():
     '''
     make the DataFrame with selected features
@@ -38,19 +62,25 @@ def make_df():
     converted all the number of kills, wounds and casualties to integer
     in case of unexpected bugs
     '''
-    df = pd.read_csv('gtd_wholedata.csv', usecols=ut.selection(),
-                         low_memory=False, index_col=0).fillna(0)
+    df = load_raw()
     df.columns = ut.feature_names()
     df[['kills', 'wounds']] = df[['kills', 'wounds']].astype(int)
     df['casualties'] = df.kills + df.wounds
     return df
 
 
+# Data Preparation Functions
 def save_df_csv():
     '''
     make a csv file with all selected features
     '''
     return make_df().to_csv('gtd_wholedata_selected.csv')
+
+
+### Above are functions serve for data preparations
+### for a better user experience
+### we have pre-processed the dataset
+### and made our project ready to use
 
 
 def load_df():

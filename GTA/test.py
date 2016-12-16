@@ -43,17 +43,6 @@ class UserTest(unittest.TestCase):
         self.test_dot_plot = Dot_Plot_Data(self.test_dot_plot_data, 'country', 'casualties', 'year', 'attacktype', 'casualties')
 
 
-    def test_make_df(self):
-        '''
-        test the make_df function in the data module
-        whether returns the correct DataFrames
-        '''
-        # test if the appended feature name 'casualties' is in the column names
-        self.assertTrue('casualties' in make_df().columns.tolist())
-        # test whether the length of DataFrame is greater than 150,000
-        self.assertGreater(make_df().shape[0], 150000)
-
-
     def test_load_json_file(self):
         '''
         test the load_json_file function in the data module
@@ -331,7 +320,7 @@ class UserTest(unittest.TestCase):
             cr.plot_choropleth(Color='cool', Feature='wounds', Year=2016)
         with self.assertRaises(NoDataError):
             cr.plot_choropleth(Color='Blues', Feature='kills', Year=1919)
-    
+
 
     def test_plot_2D_density(self):
         '''

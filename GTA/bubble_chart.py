@@ -7,14 +7,14 @@ Created on Dec 14, 2016
 from ipywidgets import *
 import pandas as pd
 import numpy as np
-import heatmap as hm
+import heatmap as ht
 import matplotlib.pyplot as plt
 import math
 import matplotlib.patches as mpatches
 import util
 from matplotlib import cm
 
-Global_terrorism_analysis = hm.GTA()
+Global_terrorism_analysis = ht.GTA()
 bubble_chart_features = ['year', 'country', 'region', 'casualties']
 gtd_bubble = Global_terrorism_analysis.gt_df[bubble_chart_features]
 gtd_bubble = util.replace_series_with_range(gtd_bubble, gtd_bubble['year'], 5)
@@ -43,47 +43,47 @@ class Bubble_Chart_Data():
         self.subgroups = util.group_by_columns(self.data, [self.bubble_id, self.color, self.user_filter], self.values)
         self.x_values = values
         self.y_values = values
-    
+
     def count_by_subgroup(self):
         '''Uses group from init function to create a count'''
         return util.count_by_groups(self.subgroups)
-        
+
     def sum_by_subgroup(self):
         '''Uses sum from init function to create a sum'''
         return util.sum_by_groups(self.subgroups)
-    
+
     def aggregate_by_subgroup(self):
         '''Returns sum and count merged together'''
         self.new_data = pd.concat((self.count_by_subgroup(), self.sum_by_subgroup()), axis=1, join='outer')
         self.new_data.columns = ['occurrences', self.values]
         self.new_data.reset_index(level=self.color, inplace=True)
-        
+
     def count_by_group(self):
         '''Returns the sum by groups (ignores user filters)'''
         return util.count_by_groups(self.groups)
-    
+
     def set_bubble_size(self, bubble_size, new_col_name):
         '''bubble size must be a one-column dataframe or series with the bubble_id as the index'''
         self.new_data = pd.DataFrame(bubble_size).join(self.new_data, how='inner')
         self.new_data = self.new_data.rename(index=str, columns={pd.DataFrame(bubble_size).columns[0]: new_col_name})
         self.bubble_size = new_col_name
-        
+
     def set_x_axis_values(self, x_values):
         '''Stores the column name corresponding to the bubbles' values on the x-axis'''
         self.x_values = x_values
-    
+
     def set_y_axis_values(self, y_values):
         '''Stores the column name corresponding to the bubbles' values on the y-axis'''
         self.y_values = y_values
-        
+
     def add_color_dict(self):
         '''Creates a dictionary that maps the color variable to numbers, should be called after aggregate'''
         #Used this resource: http://stackoverflow.com/questions/14885895/color-by-column-values-in-matplotlib
         color_cats = self.data[self.color].unique()
         colors = np.linspace(0, 1, len(color_cats))
-        colordict = dict(zip(color_cats, colors))  
+        colordict = dict(zip(color_cats, colors))
         self.new_data['color'] = self.new_data[self.color].apply(lambda x: colordict[x])
-    
+
     def process_bubble_chart_data(self, x_values, y_values):
         '''Prepares bubble chart to be plotted'''
         self.aggregate_by_subgroup()
@@ -92,11 +92,11 @@ class Bubble_Chart_Data():
         self.set_y_axis_values(y_values)
         self.add_color_dict()
         self.new_data.reset_index(level=self.bubble_id, inplace=True)
-        
+
     def filter_for_user(self, user_input):
         '''Selects the part of the data that the user selected, should be called after aggregate'''
         self.new_data = self.new_data.loc[user_input, :]
-    
+
     def create_legend(self):
         '''Takes an object from the bubble chart data class and creates an appropriate legend. Must be called after process data'''
         grouped_by_color = util.group_by_columns(self.new_data, [self.color, 'color'], self.bubble_id)
@@ -109,7 +109,7 @@ class Bubble_Chart_Data():
             colors_legend[counted_by_color[self.color][i]] = cm.viridis(counted_by_color['color'][i])
 
         return colors_legend
-    
+
     def annotate(self):
         '''Labels the top 10 bubbles by the attribute that will be on the y-axis'''
         self.new_data.sort_values(self.y_values, ascending=False).iloc[0:20]
@@ -118,26 +118,26 @@ class Bubble_Chart_Data():
             offset_x = math.sqrt(self.new_data[self.bubble_size].iloc[i])/4
             offset_y = - math.sqrt(self.new_data[self.bubble_size].iloc[i])/25
 
-            plt.annotate(self.new_data[self.bubble_id].iloc[i], 
+            plt.annotate(self.new_data[self.bubble_id].iloc[i],
                          xy = (self.new_data[self.x_values].iloc[i], self.new_data[self.y_values].iloc[i]),
                          xytext=(offset_x, offset_y),
                          textcoords='offset points',
                          color='darkslategrey')
-    
+
     def format_axes_length(self, ax):
         '''Formats axes lengths according to range of values to present'''
         x_limit = math.ceil(max(self.new_data[self.x_values])/750)*750
         y_limit = math.ceil(max(self.new_data[self.y_values])/7500)*7500
         ax.set_xlim(xmin = -0.05*x_limit, xmax = x_limit )
         ax.set_ylim(ymin = -0.05*y_limit, ymax = y_limit )
-    
+
     def format_labels(self, ax):
         '''Creates meaningful chart title and axis labels'''
         ax.set_title(str.title(self.x_values) + ' and ' + str.title(self.y_values) + ' by ' + str.title(self.bubble_id))
         ax.title.set_fontsize(15)
         ax.set_xlabel(str.title(self.x_values))
         ax.set_ylabel(str.title(self.y_values))
-    
+
     def create_bubble_chart(self, year):
         '''Draws the bubble chart'''
         self.process_bubble_chart_data('occurrences', 'casualties')
@@ -149,11 +149,11 @@ class Bubble_Chart_Data():
 
         self.format_labels(ax)
 
-        ax.scatter(self.new_data[self.x_values], 
+        ax.scatter(self.new_data[self.x_values],
                          self.new_data[self.y_values],
-                         self.new_data[self.bubble_size]/5, 
-                         c = self.new_data['color'], 
-                         cmap = 'viridis', 
+                         self.new_data[self.bubble_size]/5,
+                         c = self.new_data['color'],
+                         cmap = 'viridis',
                          alpha = 0.5)
 
         self.new_data.sort_values(self.y_values, ascending=False).iloc[0:20]
@@ -175,5 +175,3 @@ def Display_Your_Bubble_Chart():
     and customize the bubble chart
     '''
     interact(bubble_chart.create_bubble_chart, year=IntSlider(min=1975,max=2015,step=5,value=1995, width = '90%', description =  'End 5yr Range'))
-    
-
